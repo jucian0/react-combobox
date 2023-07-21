@@ -10,11 +10,15 @@ function Fieldset(props: ComboboxProps) {
   const { state, setState } = useComboboxState();
   const { label, id = React.useId() } = props;
 
-  function handleToggleOptions() {
+  async function handleToggleOptions() {
     setState({ isOpened: !state.isOpened });
+    if (props.asyncOptions && state.options.length === 0) {
+      const options = await props.asyncOptions("");
+      setState({ filteredOptions: options, options });
+    }
   }
 
-  function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
+  async function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
     setState({ inputValue: event.target.value });
 
     const filteredOptions = filterOptionByLabel(
@@ -26,19 +30,26 @@ function Fieldset(props: ComboboxProps) {
     //so the callback will not be called twice if the next query matches an existing option
     if (filteredOptions.length === 0) {
       if (props.asyncOptions) {
-        props.asyncOptions(event.target.value).then((options) => {
-          if (options.length === 0) {
-            setState({ filteredOptions });
-          } else {
-            setState({ filteredOptions: options, options, isOpened: true });
-          }
-        });
+        const options = await handleAsyncData(event.target.value);
+        setState({ filteredOptions: options, options, isOpened: true });
       } else {
         setState({ filteredOptions: state.options });
       }
       setState({ isOpened: false });
     } else {
       setState({ isOpened: true, filteredOptions });
+    }
+  }
+
+  async function handleAsyncData(query = "") {
+    try {
+      const options = await props.asyncOptions?.(query);
+      if (!options) {
+        throw new Error("No options found");
+      }
+      return options;
+    } catch {
+      return [];
     }
   }
 
