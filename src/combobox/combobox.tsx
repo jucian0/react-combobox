@@ -14,12 +14,6 @@ function Fieldset(props: ComboboxProps) {
     setState({ isOpened: !state.isOpened });
   }
 
-  /**
-   *
-   * @param event React.ChangeEvent<HTMLInputElement>
-   * Handle input change and filter options
-   *
-   */
   function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
     setState({ inputValue: event.target.value });
 
