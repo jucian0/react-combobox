@@ -10,7 +10,6 @@ export interface ComboboxProps
   placeholder?: string;
   disabled?: boolean;
   readOnly?: boolean;
-  className?: string;
   asyncOptions?: (value: string) => Promise<OptionType[]>;
   children?: (options: OptionType[]) => React.ReactNode[];
 }

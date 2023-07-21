@@ -104,10 +104,13 @@ function Fieldset(props: ComboboxProps) {
           aria-controls="container-listbox"
         />
         <button
+          type="button"
+          data-testid="arrow-button"
           tabIndex={-1}
           className={styles.arrow}
           data-opened={state.isOpened}
           onClick={handleToggleOptions}
+          aria-controls="container-listbox"
         >
           ▲
         </button>

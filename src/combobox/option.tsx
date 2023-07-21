@@ -59,6 +59,8 @@ export function Option(props: React.PropsWithChildren<OptionProps>) {
       aria-disabled={props.disabled}
       data-focused={isFocused}
       id={props.value}
+      data-testid={props.value}
+      aria-description={computedLabel}
     >
       {computedLabel}
     </li>
