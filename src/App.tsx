@@ -1,35 +1,76 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Combobox, Option } from "./combobox";
 
-function App() {
-  const [count, setCount] = useState(0)
+const options = [
+  { label: "Option 1", value: "1" },
+  { label: "Option 2", value: "2" },
+  { label: "Option 3", value: "3" },
+  { label: "Option 4", value: "4" },
+  { label: "Option 5", value: "5", disabled: true },
+  { label: "Option 6", value: "6" },
+  { label: "Option 7", value: "7" },
+  { label: "Option 8", value: "8" },
+  { label: "Option 9", value: "9" },
+  { label: "Option 10", value: "10" },
+  { label: "Option 11", value: "11" },
+  { label: "Option 12", value: "12" },
+  { label: "Option 13", value: "13" },
+  { label: "Option 14", value: "14" },
+  { label: "Option 15", value: "15" },
+  { label: "Option 16", value: "16" },
+];
 
+function SyncExample() {
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <Combobox label="Combobox sync" options={options} value="8">
+      {(opts) =>
+        opts.map((option) => (
+          <Option key={option.value} {...option}>
+            {option.label}
+          </Option>
+        ))
+      }
+    </Combobox>
+  );
 }
 
-export default App
+function AsyncExample() {
+  return (
+    <Combobox
+      label="Combobox async"
+      asyncOptions={async (e) => {
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            resolve(
+              [
+                { label: "Option 1", value: "1" },
+                { label: "Option 2", value: "2" },
+                { label: "Option 3", value: "3" },
+                { label: "Option 4", value: "4" },
+                { label: "Option 5", value: "5", disabled: true },
+              ].filter((option) => option.label.toLowerCase().includes(e))
+            );
+          }, 1000);
+        });
+      }}
+    >
+      {(opts) =>
+        opts.map((option) => (
+          <Option key={option.value} {...option}>
+            {option.label}
+          </Option>
+        ))
+      }
+    </Combobox>
+  );
+}
+
+function App() {
+  return (
+    <div className="content">
+      <SyncExample />
+      <AsyncExample />
+    </div>
+  );
+}
+
+export default App;
