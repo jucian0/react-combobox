@@ -18,10 +18,12 @@ function Fieldset(props: ComboboxProps) {
     setState({ inputValue: event.target.value });
 
     const filteredOptions = filterOptionByLabel(
-      props.options ?? [],
+      state.options,
       event.target.value
     );
 
+    // after call asyncOptions once, it will keep the options in the cache,
+    //so the callback will not be called twice if the next query matches an existing option
     if (filteredOptions.length === 0) {
       if (props.asyncOptions) {
         props.asyncOptions(event.target.value).then((options) => {
@@ -83,6 +85,7 @@ function Fieldset(props: ComboboxProps) {
       className={styles.fieldset}
       ref={fieldsetRef}
       onKeyDown={handleArrowUpArowDown}
+      data-testid="fieldset"
     >
       <label htmlFor={id}>{label}</label>
       <div className={styles.display}>

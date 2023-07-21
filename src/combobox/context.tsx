@@ -35,6 +35,14 @@ export function ComboboxProvider(
     focusedIndex: -1,
   });
 
+  const previousValue = React.useRef(state.value);
+  React.useEffect(() => {
+    if (previousValue.current !== state.value) {
+      previousValue.current = state.value;
+      props.onChange?.(state.value);
+    }
+  }, [state.value]);
+
   return (
     <ComboboxContext.Provider value={{ state, setState }}>
       {props.children}

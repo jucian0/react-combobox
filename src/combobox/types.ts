@@ -1,8 +1,4 @@
-export interface ComboboxProps
-  extends Omit<
-    React.SelectHTMLAttributes<HTMLSelectElement>,
-    "onChange" | "children"
-  > {
+export type ComboboxProps = {
   label?: string;
   value?: string;
   onChange?: (value: string) => void;
@@ -12,7 +8,10 @@ export interface ComboboxProps
   readOnly?: boolean;
   asyncOptions?: (value: string) => Promise<OptionType[]>;
   children?: (options: OptionType[]) => React.ReactNode[];
-}
+} & Omit<
+  React.SelectHTMLAttributes<HTMLSelectElement>,
+  "onChange" | "children"
+>;
 
 export type OptionType = {
   label: string;

@@ -2,11 +2,11 @@ import React from "react";
 import { useComboboxState } from "./context";
 import styles from "./styles.module.css";
 
-interface OptionProps {
+type OptionProps = {
   label?: string;
   value: string;
   disabled?: boolean;
-}
+};
 
 export function Option(props: React.PropsWithChildren<OptionProps>) {
   const { setState, state } = useComboboxState();
@@ -14,9 +14,14 @@ export function Option(props: React.PropsWithChildren<OptionProps>) {
   const ref = React.useRef<HTMLLIElement>(null);
 
   const isSelected = state.value === props.value;
-  const isFocused =
-    state.focusedIndex ===
-    state.filteredOptions.findIndex((option) => option.value === props.value);
+  const isFocused = React.useMemo(
+    () =>
+      state.focusedIndex ===
+      state.filteredOptions.findIndex(
+        (option) => option.value === props.value && !option.disabled
+      ),
+    [state.focusedIndex, state.filteredOptions]
+  );
 
   function changeState(value: string) {
     setState({
@@ -26,11 +31,11 @@ export function Option(props: React.PropsWithChildren<OptionProps>) {
     });
   }
   function handleClick() {
-    changeState(props.value);
+    !props.disabled && changeState(props.value);
   }
 
   function handleKeyDown(event: React.KeyboardEvent) {
-    if (event.key === "Enter") {
+    if (event.key === "Enter" && !props.disabled) {
       return changeState(props.value);
     }
   }
@@ -57,7 +62,6 @@ export function Option(props: React.PropsWithChildren<OptionProps>) {
       onKeyDown={handleKeyDown}
       aria-selected={isSelected}
       aria-disabled={props.disabled}
-      data-focused={isFocused}
       id={props.value}
       data-testid={props.value}
       aria-description={computedLabel}
